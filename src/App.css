@@ -1,9 +1,16 @@
 #root {
-  max-width: 1280px;
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem; /* Menos padding para móviles */
   text-align: center;
+  box-sizing: border-box; /* Buena práctica para que el padding no afecte el ancho total */
+}@media (min-width: 768px) {
+  #root {
+    max-width: 1280px; /* Restauramos el ancho máximo en pantallas grandes */
+    padding: 2rem; /* Aumentamos el padding para escritorio */
+  }
 }
+
 
 .logo {
   height: 6em;
