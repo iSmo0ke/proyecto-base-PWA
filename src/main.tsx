@@ -6,8 +6,6 @@ import './index.css';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
-import ActivityForm from './components/ActivityForm.tsx';
-import ActivityList from './components/ativityList.tsx';
 import ActivitiesPage from './pages/ActivitiesPage.tsx';
 
 // Ocultar splash screen cuando React esté listo
