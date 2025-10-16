@@ -103,15 +103,6 @@
     
     <!-- Service Worker & Splash Screen Logic -->
     <script>
-      // Registrar Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(registration => console.log('SW registrado:', registration))
-            .catch(error => console.log('Error SW:', error));
-        });
-      }
-
       // Ocultar Splash Screen cuando React esté listo
       window.addEventListener('load', () => {
         // Esperar a que React hydrate el contenido
