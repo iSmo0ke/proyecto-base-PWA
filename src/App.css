@@ -47,3 +47,18 @@
 .read-the-docs {
   color: #888;
 }
+
+
+/* src/App.css */
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+}
+.status.online {
+  background-color: #28a745;
+}
+.status.offline {
+  background-color: #dc3545;
+}

@@ -3,7 +3,6 @@ const CACHE_NAME = 'app-shell-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/src/main.tsx',
   '/vite.svg',
   '/icons/icon-192.png',
   '/icons/icon-512.png'
