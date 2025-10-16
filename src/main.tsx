@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
 import ActivityForm from './components/ActivityForm.tsx';
 import ActivityList from './components/ativityList.tsx';
+import ActivitiesPage from './pages/ActivitiesPage.tsx';
 
 // Ocultar splash screen cuando React esté listo
 const hideSplashScreen = () => {
@@ -30,21 +31,16 @@ const hideSplashScreen = () => {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />, // App será el layout principal
+    element: <App />,
     children: [
       {
-        index: true, // La ruta hija por defecto (/)
+        index: true,
         element: <HomePage />,
       },
       {
-        path: 'formulario', // La ruta para /formulario
-        element: (
-          <div>
-            <ActivityForm />
-            <hr />
-            <ActivityList />
-          </div>
-        ),
+        path: 'formulario',
+        // 👇 2. USA EL NUEVO COMPONENTE AQUÍ
+        element: <ActivitiesPage />,
       },
     ],
   },
