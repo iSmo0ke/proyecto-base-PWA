@@ -1,28 +1,60 @@
-// src/components/ativityList.tsx
+// src/components/ActivityList.tsx
 
-// 1. Importamos la interfaz 'Activity' desde la página que la define
+import { useState } from 'react';
 import type { Activity } from '../types';
+import { syncPendingActivities } from '../syncUtils';
 
-// 2. Definimos las props que este componente espera recibir
 interface ActivityListProps {
   activities: Activity[];
+  onSynced?: () => void; // opcional: refrescar la lista tras sincronizar
 }
 
-// 3. Ya no necesitamos 'useState' ni 'useEffect' aquí
-function ActivityList({ activities }: ActivityListProps) {
+function ActivityList({ activities, onSynced }: ActivityListProps) {
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    const result = await syncPendingActivities();
+    setIsSyncing(false);
+
+    if (result.success) {
+      alert('✅ Sincronización completada correctamente.');
+      onSynced && onSynced(); // refresca las actividades si se pasa la función
+    } else {
+      alert('❌ Error al sincronizar. Revisa la consola.');
+    }
+  };
+
   return (
     <div>
       <h3>Actividades Guardadas</h3>
+
+      {/* Botón de sincronización */}
+      <button
+        onClick={handleSync}
+        disabled={isSyncing}
+        style={{
+          marginBottom: '10px',
+          padding: '6px 12px',
+          cursor: isSyncing ? 'not-allowed' : 'pointer',
+        }}
+      >
+        {isSyncing ? 'Sincronizando...' : '🔄 Sincronizar pendientes'}
+      </button>
+
       {activities.length === 0 ? (
         <p>No hay actividades guardadas.</p>
       ) : (
         <ul>
           {activities.map((act) => (
-            // 4. Usamos la 'key' correcta y mostramos el indicador de 'pendiente'
             <li key={act._id || act.key}>
-              {act.text} -
-              <small> {new Date(act.timestamp).toLocaleString()}</small>
-              {act.isPending && <small style={{ marginLeft: '10px', color: '#888' }}>🔄 Pendiente de sincronizar</small>}
+              {act.text} -{' '}
+              <small>{new Date(act.timestamp).toLocaleString()}</small>
+              {act.isPending && (
+                <small style={{ marginLeft: '10px', color: '#888' }}>
+                  🔄 Pendiente de sincronizar
+                </small>
+              )}
             </li>
           ))}
         </ul>
