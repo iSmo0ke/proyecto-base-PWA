@@ -6,48 +6,47 @@ import { initDB } from './db';
 
 declare const self: ServiceWorkerGlobalScope;
 
-// --- 1. CACHEO DE LA APP ---
-// Workbox se encarga de cachear todos los archivos de tu app.
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
-// --- 2. LÓGICA DE SINCRONIZACIÓN ---
-self.addEventListener('sync', (event: SyncEvent) => {
+self.addEventListener('sync', (event) => {
   if (event.tag === 'sync-new-activities') {
-    event.waitUntil(syncActivities());
+    console.log('📡 Service Worker: Evento "sync" recibido.');
+    event.waitUntil(syncPendingActivities());
   }
 });
 
-async function syncActivities() {
-  const db = await initDB();
-  const allActivities = await db.getAll('activities');
+async function syncPendingActivities() {
+  try {
+    const db = await initDB();
+    const pendingActivities = await db.getAll('activities');
 
-  if (allActivities.length === 0) {
-    return; // No hay nada que sincronizar
-  }
+    if (pendingActivities.length === 0) {
+      console.log('👍 No hay actividades pendientes.');
+      return;
+    }
 
-  for (const activity of allActivities) {
-    const { key, ...activityToSend } = activity;
+    console.log(`⏳ Sincronizando ${pendingActivities.length} actividades...`);
 
-    try {
-      // 🚨 ¡AQUÍ VA LA URL DE TU BACKEND EN RENDER! 🚨
-      const response = await fetch('https://pwa-back-8rp5.onrender.com/activities', {
+    for (const activity of pendingActivities) {
+      const { key, isPending, ...activityToSend } = activity;
+
+      const response = await fetch('http://localhost:3001/activitiesPost', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(activityToSend),
       });
 
       if (response.ok) {
-        // Si el servidor lo guardó bien, lo borramos de la base de datos local.
-        await db.delete('activities', key!);
+        console.log(`✅ Actividad "${activity.text}" sincronizada.`);
+        await db.delete('activities', activity.key!);
       } else {
-        // Si falla, paramos para no perder datos. El SW lo reintentará más tarde.
-        throw new Error('El servidor rechazó la petición.');
+        console.warn(`⚠️ Error al sincronizar "${activity.text}".`);
       }
-    } catch (error) {
-      console.error('Fallo al sincronizar una actividad. Se reintentará más tarde.', error);
-      // Detenemos el bucle para no intentar enviar el resto si la red falla.
-      return; 
     }
+
+    console.log('✨ Sincronización completada.');
+  } catch (error) {
+    console.error('❌ Falló la sincronización. Se reintentará luego.', error);
   }
 }
