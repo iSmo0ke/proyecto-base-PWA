@@ -1,35 +1,32 @@
 // vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { VitePWA } from 'vite-plugin-pwa'; // 👈 1. Importa el plugin
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   plugins: [
     react(),
-    // 👇 2. Añade la configuración del plugin
     VitePWA({
-      registerType: 'autoUpdate', // Se actualiza solo sin molestar al usuario
-      devOptions: {
-        enabled: true // Habilítalo en desarrollo para probarlo
+      registerType: 'autoUpdate',
+      // 👇 Estrategia para usar NUESTRO propio Service Worker
+      injectManifest: {
+        swSrc: 'src/sw.ts', // 👈 Le decimos dónde está nuestro archivo
+        swDest: 'sw.js',   // 👈 Le decimos cómo se llamará el archivo final en 'dist'
       },
-      workbox: {
-        // Esto cacheará todos los assets generados (JS, CSS, etc.)
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      devOptions: {
+        enabled: true, // Para poder probarlo en desarrollo
       },
       manifest: {
-        // El plugin también puede generar tu manifest.json
-        // Puedes mover aquí la configuración que ya tienes
         name: 'Mi App PWA de Actividades',
         short_name: 'ActividadesPWA',
         description: 'Una PWA para registrar actividades offline.',
         theme_color: '#2196f3',
         icons: [
           {
-            src: 'url.png', // Asegúrate que esté en /public
+            src: 'url.png',
             sizes: '192x192',
             type: 'image/png'
           },
-          // ... otros íconos
         ]
       }
     })
