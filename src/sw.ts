@@ -31,7 +31,7 @@ async function syncPendingActivities() {
     for (const activity of pendingActivities) {
       const { key, isPending, ...activityToSend } = activity;
 
-      const response = await fetch('http://localhost:3001/activitiesPost', {
+      const response = await fetch('https://pwa-back-8rp5.onrender.com/activitiesPost', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(activityToSend),

@@ -23,7 +23,7 @@ function ActivitiesPage() {
       // 2. Si hay conexión, obtiene datos del servidor
       if (isOnline) {
         // 🚨 RECUERDA USAR LA URL DE TU BACKEND EN RENDER 🚨
-        const response = await fetch('http://localhost:3001/activitiesGet');
+        const response = await fetch('https://pwa-back-8rp5.onrender.com/activitiesGet');
         if (response.ok) {
           serverActivities = await response.json();
         }
