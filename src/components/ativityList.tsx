@@ -1,7 +1,7 @@
 // src/components/ativityList.tsx
 
 // 1. Importamos la interfaz 'Activity' desde la página que la define
-import type { Activity } from '../pages/ActivitiesPage';
+import type { Activity } from '../types';
 
 // 2. Definimos las props que este componente espera recibir
 interface ActivityListProps {

@@ -4,15 +4,9 @@ import ActivityForm from '../components/ActivityForm';
 import ActivityList from '../components/ativityList'; // Asegúrate que el nombre del archivo sea correcto
 import { initDB } from '../db';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
+import type { Activity } from '../types';
 
 // Esta es la interfaz unificada que usaremos
-export interface Activity {
-  _id?: string; // ID que viene del servidor
-  key?: number; // ID que viene de IndexedDB
-  text: string;
-  timestamp: Date;
-  isPending?: boolean; // Para marcar si está pendiente de sincronizar
-}
 
 function ActivitiesPage() {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -29,7 +23,7 @@ function ActivitiesPage() {
       // 2. Si hay conexión, obtiene datos del servidor
       if (isOnline) {
         // 🚨 RECUERDA USAR LA URL DE TU BACKEND EN RENDER 🚨
-        const response = await fetch('https://pwa-back-8rp5.onrender.com/activities');
+        const response = await fetch('http://localhost:3001/activitiesGet');
         if (response.ok) {
           serverActivities = await response.json();
         }
