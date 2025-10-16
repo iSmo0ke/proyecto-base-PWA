@@ -12,6 +12,13 @@ function ActivitiesPage() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const isOnline = useOnlineStatus();
 
+    // Función para cargar actividades desde IndexedDB
+  const loadActivities = async () => {
+    const db = await initDB();
+    const allActivities = await db.getAll('activities');
+    setActivities(allActivities);
+  };
+
   // Esta función es el corazón de la página: busca datos en ambos lugares
   const fetchActivities = async () => {
     try {
@@ -66,7 +73,7 @@ function ActivitiesPage() {
       <ActivityForm onActivityAdded={fetchActivities} />
       <hr />
       {/* La lista solo recibe las actividades y las muestra */}
-      <ActivityList activities={activities} />
+      <ActivityList activities={activities} onSynced={loadActivities} />
     </div>
   );
 }
